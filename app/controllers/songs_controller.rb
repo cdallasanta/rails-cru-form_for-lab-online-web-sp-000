@@ -4,12 +4,17 @@ class SongsController < ApplicationController
   end
 
   def create
-    song = Song.create(song_params)
+    song = Song.new
+    song.name = params[:song][:name]
+    song.artist = Artist.find_by(name:params[:song][:artist])
+    song.genre = Genre.find_by(name:params[:song][:genre])
+    song.save
 
     redirect_to song_path(song)
   end
 
   def show
+    @song = Song.find(params[:id])
   end
 
   def edit
@@ -17,14 +22,11 @@ class SongsController < ApplicationController
 
   def update
     song = Song.find(params[:id])
-    song.update(song_params)
+    song.name = params[:song][:name]
+    song.artist = Artist.find_by(name:params[:song][:artist])
+    song.genre = Genre.find_by(name:params[:song][:genre])
+    song.save
 
-    redirect_to(song)
-  end
-
-  private
-
-  def song_params
-    params.require(:song).permit(:name)
+    redirect_to song_path(song)
   end
 end
